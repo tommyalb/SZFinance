@@ -14,9 +14,11 @@ export default function DueBeforeFifthWidget({ debts = [], monthOffset = 1 }) {
     const list = debts.filter((d) => {
       if (d.type !== 'installment' || Number(d.remaining_balance) <= 0 || !d.monthly_amount || Number(d.due_day || 1) > 5) return false;
       const dueDate = new Date(today.getFullYear(), today.getMonth() + monthOffset, Number(d.due_day || 1));
+      const cycleStartDate = new Date(dueDate.getFullYear(), dueDate.getMonth() - 1, 6);
+      const cycleEndDate = new Date(dueDate.getFullYear(), dueDate.getMonth(), 5, 23, 59, 59);
       return !(d.installments || []).some((payment) => {
         const paidDate = new Date(payment.payment_date);
-        return paidDate.getFullYear() === dueDate.getFullYear() && paidDate.getMonth() === dueDate.getMonth();
+        return paidDate >= cycleStartDate && paidDate <= cycleEndDate;
       });
     });
 
