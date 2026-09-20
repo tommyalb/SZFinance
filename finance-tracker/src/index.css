@@ -203,10 +203,10 @@ body {
   .top-widgets-row .dark-stat-card { min-height: 190px; }
   .payment-calendar, .reminders-panel, .analytics-grid, .glass-panel, .card-grid { width: 100% !important; max-width: 100% !important; }
   .analytics-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; }
-  .sidebar { height: auto !important; min-height: 0 !important; max-height: 190px !important; flex: 0 0 auto !important; justify-content: flex-start !important; overflow: visible !important; }
+  .sidebar { height: auto !important; min-height: 0 !important; max-height: 230px !important; flex: 0 0 auto !important; justify-content: flex-start !important; overflow: visible !important; }
   .sidebar > div:first-child { min-width: 0; }
   .sidebar .brand-logo { margin-bottom: 10px !important; }
-  .sidebar .nav-list { display: grid !important; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px !important; overflow: visible !important; }
+  .sidebar .nav-list { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; width: 100% !important; gap: 4px !important; overflow: visible !important; transform: none !important; }
   .sidebar .nav-item { justify-content: center; padding: 9px 4px !important; font-size: 10px; gap: 4px; }
   .sidebar .nav-item span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .sidebar .logout-btn { display: none !important; }
