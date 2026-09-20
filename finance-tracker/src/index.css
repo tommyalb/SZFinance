@@ -1098,6 +1098,7 @@ button:disabled {
 .top-widgets-row > .dark-stat-card .dark-stat-header { color: #334155; }
 .top-widgets-row > .dark-stat-card .dark-stat-body > div:first-child { color: #111827; }
 .top-widgets-row > .dark-stat-card .dark-stat-body div:last-child { color: #475569 !important; }
+.top-widgets-row { grid-template-columns: 1.05fr 1fr 1fr 1.7fr; }
 
 body[data-theme] .top-widgets-row > .dark-stat-card {
   background: rgba(255, 255, 255, 0.82);
@@ -1107,6 +1108,12 @@ body[data-theme] .top-widgets-row > .dark-stat-card {
 body[data-theme] .top-widgets-row > .dark-stat-card .dark-stat-header,
 body[data-theme] .top-widgets-row > .dark-stat-card .dark-stat-body > div:first-child,
 body[data-theme] .top-widgets-row > .dark-stat-card .dark-stat-body div:last-child { color: #111827 !important; }
+
+@media (max-width: 620px) {
+  .top-widgets-row > .early-due-card { width: 100% !important; min-height: 190px; }
+  .early-due-card .card-heading { font-size: 15px; }
+  .early-due-card .early-item-amount { white-space: nowrap; }
+}
 
 .early-due-card {
   display: flex;
