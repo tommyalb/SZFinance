@@ -217,6 +217,14 @@ body {
   .top-widgets-row > .widgets-dual-container,
   .top-widgets-row > .widgets-dual-container > .matte-card { width: 100% !important; max-width: none !important; }
   .welcome-title { margin-top: 4px; }
+  .debt-form-panel { padding: 16px !important; }
+  .debt-form-panel > div:first-child { display: flex !important; flex-direction: column !important; gap: 8px !important; margin-bottom: 14px !important; }
+  .debt-form-panel > div:first-child button { width: 100%; min-height: 44px; }
+  .debt-form-panel form > div:first-child,
+  .debt-form-panel form > div:nth-child(2) { display: flex !important; flex-direction: column !important; grid-template-columns: 1fr !important; gap: 10px !important; }
+  .debt-form-panel form > div:last-child { display: flex !important; flex-direction: column !important; align-items: stretch !important; gap: 10px !important; }
+  .debt-form-panel form > div:last-child button { width: 100%; min-height: 44px; }
+  .debt-form-panel label { margin-top: 2px; }
 }
 
 .bg-video,

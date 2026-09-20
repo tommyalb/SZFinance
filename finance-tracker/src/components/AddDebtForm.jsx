@@ -75,7 +75,7 @@ export default function AddDebtForm({ onDebtAdded }) {
   };
 
   return (
-    <div className="glass-panel" style={{ width: '100%', boxSizing: 'border-box', marginBottom: '24px' }}>
+    <div className="glass-panel debt-form-panel" style={{ width: '100%', boxSizing: 'border-box', marginBottom: '24px' }}>
       <div style={{ display: 'flex', gap: '8px', marginBottom: '18px' }}>
         <button
           type="button"
