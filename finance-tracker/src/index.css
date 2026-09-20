@@ -1099,6 +1099,8 @@ button:disabled {
 .top-widgets-row > .dark-stat-card .dark-stat-body > div:first-child { color: #111827; }
 .top-widgets-row > .dark-stat-card .dark-stat-body div:last-child { color: #475569 !important; }
 .top-widgets-row { grid-template-columns: 1.05fr 1fr 1fr 1.7fr; }
+.next-cycle-row { display: flex; width: 100%; max-width: 420px; margin: 0 0 22px; }
+.next-cycle-row .early-due-card { width: 100%; }
 
 body[data-theme] .top-widgets-row > .dark-stat-card {
   background: rgba(255, 255, 255, 0.82);
@@ -1113,6 +1115,7 @@ body[data-theme] .top-widgets-row > .dark-stat-card .dark-stat-body div:last-chi
   .top-widgets-row > .early-due-card { width: 100% !important; min-height: 190px; }
   .early-due-card .card-heading { font-size: 15px; }
   .early-due-card .early-item-amount { white-space: nowrap; }
+  .next-cycle-row { width: 100%; max-width: none; margin-bottom: 16px; }
 }
 
 .early-due-card {

@@ -233,10 +233,14 @@ export default function Dashboard() {
 
                 {/* 2. Due By 5th Breakdown Widget */}
                 <DueBeforeFifthWidget debts={debts} />
-                <DueBeforeFifthWidget debts={debts} monthOffset={2} />
 
                 {/* 3. Progress Widgets */}
                 <FinanceProgressWidgets debts={debts} />
+              </div>
+
+              {/* Following billing cycle */}
+              <div className="next-cycle-row">
+                <DueBeforeFifthWidget debts={debts} monthOffset={2} />
               </div>
 
               {/* Due Date Schedule Chart */}

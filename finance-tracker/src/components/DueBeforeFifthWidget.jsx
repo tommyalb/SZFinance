@@ -4,7 +4,10 @@ import { formatCurrency } from '../utils/formatters';
 export default function DueBeforeFifthWidget({ debts = [], monthOffset = 1 }) {
   const today = new Date();
   const monthStart = new Date(today.getFullYear(), today.getMonth() + monthOffset, 1);
+  const cycleStart = new Date(monthStart.getFullYear(), monthStart.getMonth() - 1, 6);
+  const cycleEnd = new Date(monthStart.getFullYear(), monthStart.getMonth(), 5);
   const monthName = new Intl.DateTimeFormat('en', { month: 'long' }).format(monthStart);
+  const shortDate = new Intl.DateTimeFormat('en', { day: 'numeric', month: 'short' });
   const nextDueLabel = `5th of ${monthName}`;
   // Find all active installments due on or before the 5th
   const { earlyDebts, totalDueBeforeFifth } = useMemo(() => {
@@ -26,7 +29,7 @@ export default function DueBeforeFifthWidget({ debts = [], monthOffset = 1 }) {
       <div className="card-top-bar">
         <div>
           <h3 className="card-heading">Due By 5th</h3>
-          <span className="sub-compare">Next due: {nextDueLabel}</span>
+          <span className="sub-compare">Cycle: {shortDate.format(cycleStart)} – {shortDate.format(cycleEnd)}</span>
         </div>
       </div>
 
