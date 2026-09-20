@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { addInstallment } from '../services/installmentApi';
 
 export default function AddPaymentModal({ debt, onPaymentSuccess }) {
+  const defaultPaymentDate = debt.start_date || new Date().toISOString().split('T')[0];
   const [amount, setAmount] = useState('');
-  const [paymentDate, setPaymentDate] = useState(new Date().toISOString().split('T')[0]);
+  const [paymentDate, setPaymentDate] = useState(defaultPaymentDate);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -13,7 +14,7 @@ export default function AddPaymentModal({ debt, onPaymentSuccess }) {
     try {
       await addInstallment(debt.id, parseFloat(amount), debt.remaining_balance, paymentDate);
       setAmount('');
-      setPaymentDate(new Date().toISOString().split('T')[0]);
+      setPaymentDate(defaultPaymentDate);
       onPaymentSuccess();
     } catch (err) {
       alert(`Payment failed: ${err.message}`);
