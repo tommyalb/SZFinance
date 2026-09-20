@@ -6,7 +6,9 @@ export const formatCurrency = (amount) => {
 };
 
 export const formatDate = (dateString) => {
-  return new Date(dateString).toLocaleDateString('en-MY', {
+  const [year, month, day] = String(dateString).slice(0, 10).split('-').map(Number);
+  const localDate = year && month && day ? new Date(year, month - 1, day) : new Date(dateString);
+  return localDate.toLocaleDateString('en-MY', {
     year: 'numeric',
     month: 'short',
     day: 'numeric',

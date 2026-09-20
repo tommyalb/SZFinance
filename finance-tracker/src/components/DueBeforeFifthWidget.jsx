@@ -2,6 +2,10 @@ import React, { useMemo } from 'react';
 import { formatCurrency } from '../utils/formatters';
 
 export default function DueBeforeFifthWidget({ debts = [], monthOffset = 1 }) {
+  const parseLocalDate = (value) => {
+    const [year, month, day] = String(value).slice(0, 10).split('-').map(Number);
+    return new Date(year, month - 1, day);
+  };
   const today = new Date();
   const monthStart = new Date(today.getFullYear(), today.getMonth() + monthOffset, 1);
   const cycleStart = new Date(monthStart.getFullYear(), monthStart.getMonth() - 1, 6);
@@ -20,8 +24,9 @@ export default function DueBeforeFifthWidget({ debts = [], monthOffset = 1 }) {
         ? new Date(cycleEndDate.getFullYear(), cycleEndDate.getMonth(), dueDay)
         : new Date(cycleStartDate.getFullYear(), cycleStartDate.getMonth(), dueDay);
       if (dueDate < cycleStartDate || dueDate > cycleEndDate) return false;
+      if (d.start_date && dueDate < parseLocalDate(d.start_date)) return false;
       return !(d.installments || []).some((payment) => {
-        const paidDate = new Date(payment.payment_date);
+        const paidDate = parseLocalDate(payment.payment_date);
         return paidDate >= cycleStartDate && paidDate <= cycleEndDate;
       });
     });
