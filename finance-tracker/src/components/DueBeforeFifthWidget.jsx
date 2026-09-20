@@ -12,10 +12,14 @@ export default function DueBeforeFifthWidget({ debts = [], monthOffset = 1 }) {
   // Find all active installments due on or before the 5th
   const { earlyDebts, totalDueBeforeFifth } = useMemo(() => {
     const list = debts.filter((d) => {
-      if (d.type !== 'installment' || Number(d.remaining_balance) <= 0 || !d.monthly_amount || Number(d.due_day || 1) > 5) return false;
-      const dueDate = new Date(today.getFullYear(), today.getMonth() + monthOffset, Number(d.due_day || 1));
-      const cycleStartDate = new Date(dueDate.getFullYear(), dueDate.getMonth() - 1, 6);
-      const cycleEndDate = new Date(dueDate.getFullYear(), dueDate.getMonth(), 5, 23, 59, 59);
+      if (d.type !== 'installment' || Number(d.remaining_balance) <= 0 || !d.monthly_amount) return false;
+      const dueDay = Number(d.due_day || 1);
+      const cycleEndDate = new Date(today.getFullYear(), today.getMonth() + monthOffset, 5, 23, 59, 59);
+      const cycleStartDate = new Date(today.getFullYear(), today.getMonth() + monthOffset - 1, 6);
+      const dueDate = dueDay <= 5
+        ? new Date(cycleEndDate.getFullYear(), cycleEndDate.getMonth(), dueDay)
+        : new Date(cycleStartDate.getFullYear(), cycleStartDate.getMonth(), dueDay);
+      if (dueDate < cycleStartDate || dueDate > cycleEndDate) return false;
       return !(d.installments || []).some((payment) => {
         const paidDate = new Date(payment.payment_date);
         return paidDate >= cycleStartDate && paidDate <= cycleEndDate;
@@ -54,7 +58,7 @@ export default function DueBeforeFifthWidget({ debts = [], monthOffset = 1 }) {
             <div key={item.id} className="early-due-item">
               <div>
                 <span className="early-item-title">{item.title}</span>
-                <span className="early-item-day">Next due: {item.due_day || 1}{item.due_day === 1 ? 'st' : item.due_day === 2 ? 'nd' : item.due_day === 3 ? 'rd' : 'th'} of {monthName}</span>
+                <span className="early-item-day">Due: {new Intl.DateTimeFormat('en', { day: 'numeric', month: 'short' }).format(new Date(today.getFullYear(), today.getMonth() + monthOffset - (Number(item.due_day || 1) <= 5 ? 0 : 1), Number(item.due_day || 1)))}</span>
               </div>
               <span className="early-item-amount">{formatCurrency(item.monthly_amount)}</span>
             </div>
