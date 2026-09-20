@@ -10,6 +10,7 @@ import { formatCurrency, formatDate } from '../utils/formatters';
 import PaymentCalendar from '../components/PaymentCalendar';
 import DebtAnalytics from '../components/DebtAnalytics';
 import PaymentReminders from '../components/PaymentReminders';
+import DateTimeWidget from '../components/DateTimeWidget';
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('Dashboard');
@@ -231,15 +232,14 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                {/* 2. Due By 5th Breakdown Widget */}
-                <DueBeforeFifthWidget debts={debts} />
-
                 {/* 3. Progress Widgets */}
                 <FinanceProgressWidgets debts={debts} />
+                <DateTimeWidget />
               </div>
 
               {/* Following billing cycle */}
               <div className="next-cycle-row">
+                <DueBeforeFifthWidget debts={debts} />
                 <DueBeforeFifthWidget debts={debts} monthOffset={2} />
               </div>
 

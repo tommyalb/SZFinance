@@ -1098,9 +1098,15 @@ button:disabled {
 .top-widgets-row > .dark-stat-card .dark-stat-header { color: #334155; }
 .top-widgets-row > .dark-stat-card .dark-stat-body > div:first-child { color: #111827; }
 .top-widgets-row > .dark-stat-card .dark-stat-body div:last-child { color: #475569 !important; }
-.top-widgets-row { grid-template-columns: 1.05fr 1fr 1fr 1.7fr; }
-.next-cycle-row { display: flex; width: 100%; max-width: 420px; margin: 0 0 22px; }
+.top-widgets-row { grid-template-columns: 1.05fr 1.7fr 1fr; }
+.next-cycle-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; width: 100%; margin: 0 0 22px; }
 .next-cycle-row .early-due-card { width: 100%; }
+.datetime-widget { display: flex; flex-direction: column; justify-content: space-between; min-height: 220px; background: linear-gradient(135deg, rgba(255,255,255,.6), rgba(190,220,245,.34)); }
+.datetime-icon { width: 48px; height: 48px; display: grid; place-items: center; border-radius: 16px; background: rgba(255,255,255,.62); color: #1e3a5f; font-size: 32px; }
+.datetime-label { display: block; color: #64748b; font-size: 12px; font-weight: 700; }
+.datetime-widget strong { display: block; margin: 4px 0; color: #111827; font-size: 28px; }
+.datetime-widget small { color: #475569; font-size: 12px; }
+.cycle-note { color: #64748b; font-size: 11px; line-height: 1.4; }
 
 body[data-theme] .top-widgets-row > .dark-stat-card {
   background: rgba(255, 255, 255, 0.82);
@@ -1115,7 +1121,8 @@ body[data-theme] .top-widgets-row > .dark-stat-card .dark-stat-body div:last-chi
   .top-widgets-row > .early-due-card { width: 100% !important; min-height: 190px; }
   .early-due-card .card-heading { font-size: 15px; }
   .early-due-card .early-item-amount { white-space: nowrap; }
-  .next-cycle-row { width: 100%; max-width: none; margin-bottom: 16px; }
+  .next-cycle-row { display: flex; flex-direction: column; width: 100%; max-width: none; margin-bottom: 16px; }
+  .datetime-widget { min-height: 170px; }
 }
 
 .early-due-card {
