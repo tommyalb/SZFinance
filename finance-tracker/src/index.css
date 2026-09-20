@@ -499,6 +499,7 @@ body {
 .past-payment-row button { padding: 5px 9px; background: rgba(239,68,68,.12); color: #dc2626; }
 .past-payments-form > button { font-size: 11px; padding: 8px 10px; }
 .past-payments-form .add-past-payment { background: transparent; border: 1px dashed rgba(17,24,39,.3); color: #374151; }
+.remove-payment-button { flex: 0 0 auto; padding: 2px 7px; border: 1px solid rgba(239,68,68,.3); border-radius: 8px; background: rgba(254,226,226,.72); color: #dc2626; font-size: 13px; line-height: 1; }
 .debt-category-row { display: flex; align-items: center; gap: 10px; }
 .debt-category-row label { color: #4b5563; font-size: 12px; font-weight: 700; }
 .debt-category-row select, .debt-category-row input { min-height: 40px; border: 1px solid rgba(255,255,255,.72); border-radius: 14px; padding: 9px 12px; background: rgba(255,255,255,.72); color: #111827; }

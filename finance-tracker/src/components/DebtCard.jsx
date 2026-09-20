@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { formatCurrency, formatDate } from '../utils/formatters';
 import { deleteDebt, recordPayment } from '../services/debtApi';
+import { deleteInstallment } from '../services/installmentApi';
 import AddPaymentModal from './AddPaymentModal';
 
 export default function DebtCard({ debt, refreshData }) {
   const [showPastModal, setShowPastModal] = useState(false);
   const [pastMonthsCount, setPastMonthsCount] = useState('1');
+  const [pastPayments, setPastPayments] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const isInstallment = debt.type === 'installment';
@@ -28,14 +30,21 @@ export default function DebtCard({ debt, refreshData }) {
     }
   };
 
+  const handleDeletePayment = async (payment) => {
+    if (!window.confirm('Remove this payment record? The amount will be returned to the remaining balance.')) return;
+    try {
+      await deleteInstallment(payment.id, debt.id, payment.amount_paid, debt.remaining_balance);
+      refreshData();
+    } catch (err) {
+      alert(`Error removing payment: ${err.message}`);
+    }
+  };
+
   // Bulk log previous months paid before tracking
   const handleLogPastMonths = async (e) => {
     e.preventDefault();
-    const count = parseInt(pastMonthsCount, 10);
-    if (!count || count <= 0) return;
-
-    const monthlyPay = Number(debt.monthly_amount) || (debt.total_amount / (debt.tenure_months || 1));
-    const totalToDeduct = monthlyPay * count;
+    if (!pastPayments.length || pastPayments.some((payment) => !payment.date || Number(payment.amount) <= 0)) return;
+    const totalToDeduct = pastPayments.reduce((sum, payment) => sum + Number(payment.amount), 0);
 
     if (totalToDeduct > Number(debt.remaining_balance)) {
       alert('The total for these months exceeds the current remaining balance.');
@@ -45,21 +54,20 @@ export default function DebtCard({ debt, refreshData }) {
     setIsSubmitting(true);
     try {
       let currentBal = Number(debt.remaining_balance);
-      const now = new Date();
 
       // Loop and create an installment row for each past month
-      for (let i = count; i >= 1; i--) {
-        const pastDate = new Date(now.getFullYear(), now.getMonth() - i, debt.due_day || 1);
-        currentBal -= monthlyPay;
+      for (const payment of [...pastPayments].sort((a, b) => new Date(a.date) - new Date(b.date))) {
+        currentBal -= Number(payment.amount);
         await recordPayment(
           debt.id,
-          monthlyPay,
+          Number(payment.amount),
           Math.max(0, currentBal),
-          pastDate.toISOString()
+          new Date(payment.date).toISOString()
         );
       }
 
       setShowPastModal(false);
+      setPastPayments([]);
       refreshData();
     } catch (err) {
       alert(`Error logging past payments: ${err.message}`);
@@ -131,7 +139,7 @@ export default function DebtCard({ debt, refreshData }) {
               {debt.remaining_balance > 0 && (
                 <button
                   type="button"
-                  onClick={() => setShowPastModal(!showPastModal)}
+                  onClick={() => { setShowPastModal(!showPastModal); if (!showPastModal) setPastPayments([{ date: new Date().toISOString().split('T')[0], amount: debt.monthly_amount || '' }]); }}
                   style={{
                     background: '#f3f4f6',
                     color: '#111827',
@@ -151,23 +159,15 @@ export default function DebtCard({ debt, refreshData }) {
 
         {/* Inline Dialog to add past months */}
         {showPastModal && (
-          <form onSubmit={handleLogPastMonths} style={{ background: '#ffffff', border: '1px solid #e5e7eb', padding: '10px', borderRadius: '10px', marginTop: '8px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <span style={{ fontSize: '11px', fontWeight: '700', color: '#111827' }}>Log Past Months Completed:</span>
-            <div style={{ display: 'flex', gap: '6px' }}>
-              <input
-                type="number"
-                min="1"
-                max={debt.tenure_months ? debt.tenure_months - paymentsCount : 120}
-                value={pastMonthsCount}
-                onChange={(e) => setPastMonthsCount(e.target.value)}
-                placeholder="Months"
-                style={{ flex: 1, padding: '6px 10px', fontSize: '12px' }}
-                required
-              />
-              <button type="submit" disabled={isSubmitting} style={{ padding: '6px 12px', fontSize: '11px', background: '#111827', color: '#fff' }}>
-                {isSubmitting ? 'Saving...' : 'Apply'}
-              </button>
-            </div>
+          <form onSubmit={handleLogPastMonths} className="past-payments-form">
+            <span className="past-payments-title">Add completed installments manually:</span>
+            {pastPayments.map((payment, index) => <div className="past-payment-row" key={index}>
+              <input type="date" value={payment.date} onChange={(e) => setPastPayments((items) => items.map((item, i) => i === index ? { ...item, date: e.target.value } : item))} required />
+              <input type="number" min="0.01" step="0.01" placeholder="Amount" value={payment.amount} onChange={(e) => setPastPayments((items) => items.map((item, i) => i === index ? { ...item, amount: e.target.value } : item))} required />
+              <button type="button" onClick={() => setPastPayments((items) => items.filter((_, i) => i !== index))}>×</button>
+            </div>)}
+            <button type="button" className="add-past-payment" onClick={() => setPastPayments((items) => [...items, { date: new Date().toISOString().split('T')[0], amount: debt.monthly_amount || '' }])}>+ Add another installment</button>
+            <button type="submit" disabled={isSubmitting}>{isSubmitting ? 'Saving...' : 'Save completed payments'}</button>
           </form>
         )}
 
@@ -197,8 +197,9 @@ export default function DebtCard({ debt, refreshData }) {
             </summary>
             <ul style={{ paddingLeft: '16px', margin: '8px 0 0 0', color: '#374151' }}>
               {debt.installments.map((inst, index) => (
-                <li key={inst.id} style={{ marginBottom: '4px' }}>
-                  Month {index + 1} ({formatDate(inst.payment_date)}) — {formatCurrency(inst.amount_paid)}
+                <li key={inst.id} style={{ marginBottom: '4px', display: 'flex', justifyContent: 'space-between', gap: '8px', alignItems: 'center' }}>
+                  <span>Month {index + 1} ({formatDate(inst.payment_date)}) — {formatCurrency(inst.amount_paid)}</span>
+                  <button type="button" className="remove-payment-button" onClick={() => handleDeletePayment(inst)} title="Remove payment">×</button>
                 </li>
               ))}
             </ul>

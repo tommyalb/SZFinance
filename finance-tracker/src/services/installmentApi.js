@@ -23,3 +23,12 @@ export const addInstallment = async (debtId, amountPaid, currentBalance, payment
 
   return newBalance;
 };
+
+export const deleteInstallment = async (installmentId, debtId, amountPaid, currentBalance) => {
+  const { error: deleteError } = await supabase.from('installments').delete().eq('id', installmentId);
+  if (deleteError) throw deleteError;
+  const { error: updateError } = await supabase.from('debts').update({
+    remaining_balance: Number(currentBalance) + Number(amountPaid),
+  }).eq('id', debtId);
+  if (updateError) throw updateError;
+};
