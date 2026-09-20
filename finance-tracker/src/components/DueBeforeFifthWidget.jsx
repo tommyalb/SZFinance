@@ -2,6 +2,8 @@ import React, { useMemo } from 'react';
 import { formatCurrency } from '../utils/formatters';
 
 export default function DueBeforeFifthWidget({ debts = [] }) {
+  const isAfterFifth = new Date().getDate() > 5;
+  const nextDueLabel = isAfterFifth ? '5th of next month' : '5th of this month';
   // Find all active installments due on or before the 5th
   const { earlyDebts, totalDueBeforeFifth } = useMemo(() => {
     const list = debts.filter(
@@ -21,7 +23,7 @@ export default function DueBeforeFifthWidget({ debts = [] }) {
       <div className="card-top-bar">
         <div>
           <h3 className="card-heading">Due By 5th</h3>
-          <span className="sub-compare">Early-month commitments</span>
+          <span className="sub-compare">Next due: {nextDueLabel}</span>
         </div>
       </div>
 
@@ -44,7 +46,7 @@ export default function DueBeforeFifthWidget({ debts = [] }) {
             <div key={item.id} className="early-due-item">
               <div>
                 <span className="early-item-title">{item.title}</span>
-                <span className="early-item-day">Due Day {item.due_day || 1}</span>
+                <span className="early-item-day">Next due: {item.due_day || 1}{item.due_day === 1 ? 'st' : item.due_day === 2 ? 'nd' : item.due_day === 3 ? 'rd' : 'th'} {isAfterFifth ? 'next month' : 'this month'}</span>
               </div>
               <span className="early-item-amount">{formatCurrency(item.monthly_amount)}</span>
             </div>
