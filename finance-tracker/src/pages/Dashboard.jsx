@@ -116,9 +116,7 @@ export default function Dashboard() {
 
   return (
     <div className="dashboard-wrapper">
-      <video className="bg-video" autoPlay loop muted playsInline aria-hidden="true">
-        <source src="/bg.mp4" type="video/mp4" />
-      </video>
+      <img className="bg-image" src="/bg.jpg" alt="" aria-hidden="true" />
       <div className="bg-overlay" aria-hidden="true" />
       {/* Main Glass Window */}
       <div className="dashboard-layout">

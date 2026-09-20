@@ -228,6 +228,7 @@ body {
 }
 
 .bg-video,
+.bg-image,
 .bg-overlay {
   position: fixed;
   inset: 0;
@@ -240,6 +241,11 @@ body {
 .dark-stat-header svg, .icon-tiny-btn { display: none; }
 
 .bg-video {
+  z-index: 0;
+  object-fit: cover;
+}
+
+.bg-image {
   z-index: 0;
   object-fit: cover;
 }
