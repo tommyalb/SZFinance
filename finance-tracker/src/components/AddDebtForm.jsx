@@ -10,6 +10,7 @@ export default function AddDebtForm({ onDebtAdded }) {
   const [tenureMonths, setTenureMonths] = useState('');
   const [monthlyAmount, setMonthlyAmount] = useState('');
   const [dueDay, setDueDay] = useState('5');
+  const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]);
   const [loading, setLoading] = useState(false);
 
   const parsedAmount = parseFloat(amount) || 0;
@@ -48,6 +49,7 @@ export default function AddDebtForm({ onDebtAdded }) {
         tenure_months: type === 'installment' ? parsedMonths : null,
         monthly_amount: type === 'installment' ? parseFloat(monthlyAmount) : null,
         due_day: type === 'installment' ? parseInt(dueDay, 10) : null,
+        start_date: type === 'installment' ? startDate : null,
       });
 
       // 2. If there were prior payments, log an initial installment entry
@@ -66,6 +68,7 @@ export default function AddDebtForm({ onDebtAdded }) {
       setTenureMonths('');
       setMonthlyAmount('');
       setDueDay('5');
+      setStartDate(new Date().toISOString().split('T')[0]);
       onDebtAdded();
     } catch (err) {
       alert(`Error creating entry: ${err.message}`);
@@ -141,7 +144,7 @@ export default function AddDebtForm({ onDebtAdded }) {
 
         {type === 'installment' && (
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', width: '100%' }}>
-            <div>
+          <div>
               <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: '#6b7280', marginBottom: '4px' }}>
                 MONTHLY PAYMENT (MYR)
               </label>
@@ -170,8 +173,20 @@ export default function AddDebtForm({ onDebtAdded }) {
                 required
                 style={{ width: '100%', boxSizing: 'border-box' }}
               />
-            </div>
           </div>
+          <div>
+            <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: '#6b7280', marginBottom: '4px' }}>
+              STARTED PAYING
+            </label>
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              required
+              style={{ width: '100%', boxSizing: 'border-box' }}
+            />
+          </div>
+        </div>
         )}
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '4px' }}>
