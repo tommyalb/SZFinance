@@ -1,7 +1,12 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { formatCurrency } from '../utils/formatters';
 
 export default function DueBeforeFifthWidget({ debts = [], monthOffset = 1 }) {
+  const [, setDateTick] = useState(0);
+  useEffect(() => {
+    const timer = setInterval(() => setDateTick((value) => value + 1), 60 * 1000);
+    return () => clearInterval(timer);
+  }, []);
   const parseLocalDate = (value) => {
     const [year, month, day] = String(value).slice(0, 10).split('-').map(Number);
     return new Date(year, month - 1, day);
