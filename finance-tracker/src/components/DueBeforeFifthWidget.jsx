@@ -2,17 +2,19 @@ import React, { useMemo } from 'react';
 import { formatCurrency } from '../utils/formatters';
 
 export default function DueBeforeFifthWidget({ debts = [] }) {
-  const isAfterFifth = new Date().getDate() > 5;
+  const today = new Date();
+  const isAfterFifth = today.getDate() > 5;
   const nextDueLabel = isAfterFifth ? '5th of next month' : '5th of this month';
   // Find all active installments due on or before the 5th
   const { earlyDebts, totalDueBeforeFifth } = useMemo(() => {
-    const list = debts.filter(
-      (d) =>
-        d.type === 'installment' &&
-        Number(d.remaining_balance) > 0 &&
-        d.monthly_amount &&
-        Number(d.due_day || 1) <= 5
-    );
+    const list = debts.filter((d) => {
+      if (d.type !== 'installment' || Number(d.remaining_balance) <= 0 || !d.monthly_amount || Number(d.due_day || 1) > 5) return false;
+      const dueDate = new Date(today.getFullYear(), today.getMonth() + (today.getDate() > Number(d.due_day || 1) ? 1 : 0), Number(d.due_day || 1));
+      return !(d.installments || []).some((payment) => {
+        const paidDate = new Date(payment.payment_date);
+        return paidDate.getFullYear() === dueDate.getFullYear() && paidDate.getMonth() === dueDate.getMonth();
+      });
+    });
 
     const sum = list.reduce((acc, curr) => acc + Number(curr.monthly_amount), 0);
     return { earlyDebts: list, totalDueBeforeFifth: sum };
