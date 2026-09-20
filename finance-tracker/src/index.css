@@ -203,6 +203,18 @@ body {
   .top-widgets-row .dark-stat-card { min-height: 190px; }
   .payment-calendar, .reminders-panel, .analytics-grid, .glass-panel, .card-grid { width: 100% !important; max-width: 100% !important; }
   .analytics-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; }
+  .sidebar { height: auto !important; min-height: 0 !important; max-height: 155px !important; flex: 0 0 auto !important; justify-content: flex-start !important; overflow: hidden; }
+  .sidebar > div:first-child { min-width: 0; }
+  .sidebar .brand-logo { margin-bottom: 10px !important; }
+  .sidebar .nav-list { display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; overflow-x: auto !important; }
+  .sidebar .logout-btn { display: none !important; }
+  .top-widgets-row { flex: none !important; }
+  .top-widgets-row > * { flex: 0 0 auto !important; }
+  .top-widgets-row > .dark-stat-card,
+  .top-widgets-row > .matte-card,
+  .top-widgets-row > .widgets-dual-container,
+  .top-widgets-row > .widgets-dual-container > .matte-card { width: 100% !important; max-width: none !important; }
+  .welcome-title { margin-top: 4px; }
 }
 
 .bg-video,
