@@ -112,18 +112,18 @@ export default function AddDebtForm({ onDebtAdded }) {
           </select>
           {category === 'other' && <input type="text" placeholder="State category" value={otherCategory} onChange={(e) => setOtherCategory(e.target.value)} required />}
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: type === 'installment' ? '2fr 1fr 1fr 1fr' : '2fr 1fr 1fr', gap: '12px', width: '100%' }}>
-          {type === 'debt' && <input
+        <div style={{ display: 'grid', gridTemplateColumns: type === 'installment' ? '2fr 1fr' : '2fr 1fr 1fr', gap: '12px', width: '100%' }}>
+          <input
             type="number"
             step="0.01"
             min="1"
-            placeholder="Total (MYR)"
+            placeholder={type === 'installment' ? 'Total Installment (MYR)' : 'Total (MYR)'}
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             required
             style={{ width: '100%', boxSizing: 'border-box' }}
-          />}
-          <input
+          />
+          {type === 'debt' && <input
             type="number"
             step="0.01"
             min="0"
@@ -132,7 +132,7 @@ export default function AddDebtForm({ onDebtAdded }) {
             onChange={(e) => setPriorPaid(e.target.value)}
             style={{ width: '100%', boxSizing: 'border-box' }}
             title="Amount you have already paid off before tracking here"
-          />
+          />}
           {type === 'installment' && (
             <input
               type="number"
