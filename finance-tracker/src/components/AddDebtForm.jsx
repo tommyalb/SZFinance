@@ -4,7 +4,6 @@ import { supabase } from '../lib/supabase';
 
 export default function AddDebtForm({ onDebtAdded }) {
   const [type, setType] = useState('debt');
-  const [title, setTitle] = useState('');
   const [amount, setAmount] = useState('');
   const [priorPaid, setPriorPaid] = useState('');
   const [tenureMonths, setTenureMonths] = useState('');
@@ -44,7 +43,7 @@ export default function AddDebtForm({ onDebtAdded }) {
       // 1. Create debt with accurate remaining balance
       const newDebt = await addDebt({
         user_id: user.id,
-        title: title.trim(),
+        title: category === 'other' ? otherCategory.trim() : category.charAt(0).toUpperCase() + category.slice(1),
         total_amount: parsedAmount,
         remaining_balance: type === 'installment' ? parsedAmount : initialRemaining,
         type: type,
@@ -66,7 +65,6 @@ export default function AddDebtForm({ onDebtAdded }) {
         );
       }
 
-      setTitle('');
       setAmount('');
       setPriorPaid('');
       setTenureMonths('');
@@ -115,14 +113,6 @@ export default function AddDebtForm({ onDebtAdded }) {
           {category === 'other' && <input type="text" placeholder="State category" value={otherCategory} onChange={(e) => setOtherCategory(e.target.value)} required />}
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: type === 'installment' ? '2fr 1fr 1fr 1fr' : '2fr 1fr 1fr', gap: '12px', width: '100%' }}>
-          <input
-            type="text"
-            placeholder={type === 'installment' ? 'e.g. Car Loan (Maybank)' : 'e.g. Personal Debt'}
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-            style={{ width: '100%', boxSizing: 'border-box' }}
-          />
           {type === 'debt' && <input
             type="number"
             step="0.01"
