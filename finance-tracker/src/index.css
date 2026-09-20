@@ -225,6 +225,9 @@ body {
   .debt-form-panel form > div:last-child { display: flex !important; flex-direction: column !important; align-items: stretch !important; gap: 10px !important; }
   .debt-form-panel form > div:last-child button { width: 100%; min-height: 44px; }
   .debt-form-panel label { margin-top: 2px; }
+  .past-payment-row { grid-template-columns: 1fr 1fr auto; }
+  .debt-category-row { align-items: stretch; flex-direction: column; gap: 6px; }
+  .debt-category-row select, .debt-category-row input { width: 100%; }
 }
 
 .bg-video,
@@ -489,6 +492,18 @@ body {
 .photo-adjustments { display: grid; gap: 10px; margin: -8px 0 20px; padding: 12px; border: 1px solid rgba(255,255,255,.65); border-radius: 14px; background: rgba(255,255,255,.3); }
 .photo-adjustments label { display: flex; align-items: center; justify-content: space-between; gap: 12px; color: #4b5563; font-size: 11px; font-weight: 700; }
 .photo-adjustments input[type='range'] { flex: 1; accent-color: #111827; }
+.past-payments-form { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; padding: 10px; border: 1px solid rgba(255,255,255,.65); border-radius: 14px; background: rgba(255,255,255,.42); }
+.past-payments-title { color: #111827; font-size: 11px; font-weight: 700; }
+.past-payment-row { display: grid; grid-template-columns: 1.2fr 1fr auto; gap: 6px; }
+.past-payment-row input { min-width: 0; padding: 7px 8px; font-size: 11px; }
+.past-payment-row button { padding: 5px 9px; background: rgba(239,68,68,.12); color: #dc2626; }
+.past-payments-form > button { font-size: 11px; padding: 8px 10px; }
+.past-payments-form .add-past-payment { background: transparent; border: 1px dashed rgba(17,24,39,.3); color: #374151; }
+.debt-category-row { display: flex; align-items: center; gap: 10px; }
+.debt-category-row label { color: #4b5563; font-size: 12px; font-weight: 700; }
+.debt-category-row select, .debt-category-row input { min-height: 40px; border: 1px solid rgba(255,255,255,.72); border-radius: 14px; padding: 9px 12px; background: rgba(255,255,255,.72); color: #111827; }
+.debt-category-row select { min-width: 170px; }
+.debt-category-row input { flex: 1; }
 
 /* Top Stat Grid */
 .stats-row {

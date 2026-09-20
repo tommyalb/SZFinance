@@ -11,6 +11,8 @@ export default function AddDebtForm({ onDebtAdded }) {
   const [monthlyAmount, setMonthlyAmount] = useState('');
   const [dueDay, setDueDay] = useState('5');
   const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]);
+  const [category, setCategory] = useState('education');
+  const [otherCategory, setOtherCategory] = useState('');
   const [loading, setLoading] = useState(false);
 
   const parsedAmount = parseFloat(amount) || 0;
@@ -50,6 +52,8 @@ export default function AddDebtForm({ onDebtAdded }) {
         monthly_amount: type === 'installment' ? parseFloat(monthlyAmount) : null,
         due_day: type === 'installment' ? parseInt(dueDay, 10) : null,
         start_date: type === 'installment' ? startDate : null,
+        category,
+        category_other: category === 'other' ? otherCategory.trim() : null,
       });
 
       // 2. If there were prior payments, log an initial installment entry
@@ -69,6 +73,8 @@ export default function AddDebtForm({ onDebtAdded }) {
       setMonthlyAmount('');
       setDueDay('5');
       setStartDate(new Date().toISOString().split('T')[0]);
+      setCategory('education');
+      setOtherCategory('');
       onDebtAdded();
     } catch (err) {
       alert(`Error creating entry: ${err.message}`);
@@ -99,6 +105,15 @@ export default function AddDebtForm({ onDebtAdded }) {
       </div>
 
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px', width: '100%' }}>
+        <div className="debt-category-row">
+          <label>Category</label>
+          <select value={category} onChange={(e) => setCategory(e.target.value)} required>
+            <option value="education">Education</option>
+            <option value="entertainment">Entertainment</option>
+            <option value="other">Other</option>
+          </select>
+          {category === 'other' && <input type="text" placeholder="State category" value={otherCategory} onChange={(e) => setOtherCategory(e.target.value)} required />}
+        </div>
         <div style={{ display: 'grid', gridTemplateColumns: type === 'installment' ? '2fr 1fr 1fr 1fr' : '2fr 1fr 1fr', gap: '12px', width: '100%' }}>
           <input
             type="text"
