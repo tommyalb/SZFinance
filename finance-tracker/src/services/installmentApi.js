@@ -1,13 +1,13 @@
 import { supabase } from '../lib/supabase';
 
-export const addInstallment = async (debtId, amountPaid, currentBalance) => {
+export const addInstallment = async (debtId, amountPaid, currentBalance, paymentDate) => {
   // 1. Record installment payment
   const { error: insertError } = await supabase
     .from('installments')
     .insert([{
       debt_id: debtId,
       amount_paid: amountPaid,
-      payment_date: new Date().toISOString().split('T')[0],
+      payment_date: paymentDate || new Date().toISOString().split('T')[0],
     }]);
 
   if (insertError) throw insertError;

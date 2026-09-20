@@ -3,6 +3,7 @@ import { addInstallment } from '../services/installmentApi';
 
 export default function AddPaymentModal({ debt, onPaymentSuccess }) {
   const [amount, setAmount] = useState('');
+  const [paymentDate, setPaymentDate] = useState(new Date().toISOString().split('T')[0]);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -10,8 +11,9 @@ export default function AddPaymentModal({ debt, onPaymentSuccess }) {
     setLoading(true);
 
     try {
-      await addInstallment(debt.id, parseFloat(amount), debt.remaining_balance);
+      await addInstallment(debt.id, parseFloat(amount), debt.remaining_balance, paymentDate);
       setAmount('');
+      setPaymentDate(new Date().toISOString().split('T')[0]);
       onPaymentSuccess();
     } catch (err) {
       alert(`Payment failed: ${err.message}`);
@@ -33,6 +35,13 @@ export default function AddPaymentModal({ debt, onPaymentSuccess }) {
           onChange={(e) => setAmount(e.target.value)}
           required
           style={{ flex: '1' }}
+        />
+        <input
+          type="date"
+          value={paymentDate}
+          onChange={(e) => setPaymentDate(e.target.value)}
+          title="Date the installment was paid"
+          required
         />
         <button type="submit" disabled={loading}>
           {loading ? 'Saving...' : 'Pay Installment'}
