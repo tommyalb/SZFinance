@@ -27,7 +27,7 @@ export default function AddDebtForm({ onDebtAdded }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (parsedPriorPaid > parsedAmount) {
+    if (type === 'debt' && parsedPriorPaid > parsedAmount) {
       alert('Prior paid amount cannot exceed total obligation amount.');
       return;
     }
@@ -37,14 +37,14 @@ export default function AddDebtForm({ onDebtAdded }) {
     try {
       const { data: { user } } = await supabase.auth.getUser();
 
-      const initialRemaining = parsedAmount - parsedPriorPaid;
+    const initialRemaining = type === 'installment' ? parsedAmount : parsedAmount - parsedPriorPaid;
 
       // 1. Create debt with accurate remaining balance
       const newDebt = await addDebt({
         user_id: user.id,
         title: title.trim(),
         total_amount: parsedAmount,
-        remaining_balance: initialRemaining,
+        remaining_balance: type === 'installment' ? parsedAmount : initialRemaining,
         type: type,
         tenure_months: type === 'installment' ? parsedMonths : null,
         monthly_amount: type === 'installment' ? parseFloat(monthlyAmount) : null,
@@ -53,7 +53,7 @@ export default function AddDebtForm({ onDebtAdded }) {
       });
 
       // 2. If there were prior payments, log an initial installment entry
-      if (parsedPriorPaid > 0 && newDebt && newDebt[0]) {
+      if (type === 'debt' && parsedPriorPaid > 0 && newDebt && newDebt[0]) {
         await recordPayment(
           newDebt[0].id,
           parsedPriorPaid,
@@ -108,7 +108,7 @@ export default function AddDebtForm({ onDebtAdded }) {
             required
             style={{ width: '100%', boxSizing: 'border-box' }}
           />
-          <input
+          {type === 'debt' && <input
             type="number"
             step="0.01"
             min="1"
@@ -117,7 +117,7 @@ export default function AddDebtForm({ onDebtAdded }) {
             onChange={(e) => setAmount(e.target.value)}
             required
             style={{ width: '100%', boxSizing: 'border-box' }}
-          />
+          />}
           <input
             type="number"
             step="0.01"
