@@ -130,6 +130,10 @@ export default function DebtCard({ debt, refreshData }) {
               <span style={{ color: '#6b7280' }}>Due Date:</span>
               <strong style={{ color: '#dc2626' }}>Every {debt.due_day || 1}th</strong>
             </div>
+            {debt.start_date && <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+              <span style={{ color: '#6b7280' }}>Started Paying:</span>
+              <strong>{formatDate(debt.start_date)}</strong>
+            </div>}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #e5e7eb', paddingTop: '6px', marginTop: '4px' }}>
               <span style={{ color: '#6b7280' }}>
                 Tenure: <strong>{paymentsCount} / {debt.tenure_months || 0} paid</strong> ({remainingMonths} left)
